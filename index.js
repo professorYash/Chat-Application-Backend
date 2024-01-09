@@ -1,17 +1,27 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
-const app = express();
 const socket = require("socket.io");
 const connectDB = require("./models/db");
-require("dotenv").config();
+
+const app = express();
+const server = http.createServer(app);
+const io = socket(server, {
+  cors: {
+    origin: process.env.ALLOWED_ORIGIN,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  },
+});
 
 const corsOptions = {
   origin: process.env.ALLOWED_ORIGIN,
   methods: ['GET', 'PUT', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -22,15 +32,10 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const server = app.listen(process.env.PORT, () =>
-  console.log(`Server started on ${process.env.PORT}`)
-);
-const io = socket(server, {
-  cors: {
-    origin: process.env.ALLOWED_ORIGIN,
-    credentials: true,
-  },
-});
+// const server = app.listen(process.env.PORT, () =>
+//   console.log(`Server started on ${process.env.PORT}`)
+// );
+
 
 global.onlineUsers = new Map();
 io.on("connection", (socket) => {
@@ -46,3 +51,5 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+server.listen(process.env.PORT, () => console.log('Server started at successfully!!!'));
