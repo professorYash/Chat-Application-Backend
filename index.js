@@ -33,11 +33,6 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// const server = app.listen(process.env.PORT, () =>
-//   console.log(`Server started on ${process.env.PORT}`)
-// );
-
-
 global.onlineUsers = new Map();
 io.on("connection", (socket) => {
   global.chatSocket = socket;
