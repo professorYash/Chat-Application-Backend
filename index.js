@@ -5,6 +5,7 @@ const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const socket = require("socket.io");
 const connectDB = require("./models/db");
+const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
