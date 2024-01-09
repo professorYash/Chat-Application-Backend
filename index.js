@@ -7,7 +7,9 @@ const socket = require("socket.io");
 const connectDB = require("./models/db");
 require("dotenv").config();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN
+}));
 app.use(express.json());
 
 // Connection to database
